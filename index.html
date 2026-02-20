@@ -3,13 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <!-- Важно для мобильных устройств -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Заголовок для поисковиков (Title) -->
-    <title>Фреза линейка — визуализация скорости подачи (мм/сек, мм/мин)</title>
-    <!-- Мета-описание для поиска -->
-    <meta name="description" content="Фреза и линейка: визуальный симулятор движения. Наблюдайте за скоростью подачи в реальном времени. Переключение между мм/сек и мм/мин.">
-    <!-- Ключевые слова (необязательно, но можно добавить) -->
-    <meta name="keywords" content="фреза линейка, скорость фрезы, визуализация подачи, симулятор фрезы, мм/сек, мм/мин, ЧПУ">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+    
+    <!-- Основные SEO-теги для России -->
+    <title>Фреза линейка — визуализация скорости подачи (мм/сек, мм/мин) для ЧПУ</title>
+    <meta name="description" content="Бесплатный визуальный симулятор движения фрезы по линейке. Наблюдайте за скоростью подачи в реальном времени. Переключение между мм/сек и мм/мин. Для настройки ЧПУ станков и обучения.">
+    <meta name="keywords" content="фреза линейка, скорость подачи фрезы, визуализация подачи, симулятор фрезы, мм/сек, мм/мин, ЧПУ, настройка станка, подача инструмента, фрезерование">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Павел Волков">
+    <meta name="yandex-verification" content="ваш_код_верификации"> <!-- Для Яндекс.Вебмастера -->
+    
+    <!-- Open Graph для VK и других российских соцсетей -->
+    <meta property="og:title" content="Фреза линейка — симулятор скорости подачи онлайн">
+    <meta property="og:description" content="Визуализация движения фрезы по линейке. Регулировка скорости, переключение мм/сек и мм/мин. Идеально для настройки ЧПУ.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://volkovhl.github.io/freza-lineyka/">
+    <meta property="og:site_name" content="Фреза линейка — симулятор ЧПУ">
+    <meta property="og:image" content="https://volkovhl.github.io/freza-lineyka/screenshot-freza.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="Визуализация движения фрезы по линейке">
+    <meta property="og:locale" content="ru_RU">
+    
+    <!-- VK (поддержка картинок) -->
+    <meta property="vk:image" content="https://volkovhl.github.io/freza-lineyka/screenshot-freza.png">
+    
+    <!-- Favicon (эмодзи-иконка для простоты) -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚙️</text></svg>">
     
     <style>
         * {
@@ -44,6 +64,7 @@
             gap: 12px;
             font-size: 1.9rem;
             letter-spacing: -0.3px;
+            flex-wrap: wrap;
         }
         h1 span {
             background: #1f3f6f;
@@ -197,6 +218,7 @@
             margin-top: 12px;
             padding-left: 20px;
             align-items: center;
+            flex-wrap: wrap;
         }
         .legend span::before {
             content: "⏺";
@@ -211,11 +233,57 @@
             text-align: center;
             margin-top: 25px;
         }
+        
+        /* Адаптация для мобильных */
+        @media (max-width: 600px) {
+            body {
+                margin: 10px;
+            }
+            .card {
+                padding: 20px 15px;
+            }
+            h1 {
+                font-size: 1.5rem;
+            }
+            .control-panel {
+                padding: 15px;
+            }
+            .speed-box {
+                width: 100%;
+                justify-content: space-between;
+            }
+            .speed-box input {
+                width: 80px;
+            }
+            .unit-selector {
+                width: 100%;
+                justify-content: center;
+            }
+            .unit-btn {
+                padding: 10px 20px;
+                font-size: 1rem;
+            }
+            .info-bar {
+                flex-direction: column;
+                gap: 10px;
+                padding: 15px;
+            }
+            .readout {
+                width: 100%;
+                text-align: center;
+            }
+            .btn-reset {
+                width: 100%;
+            }
+            .legend {
+                justify-content: center;
+                padding-left: 0;
+            }
+        }
     </style>
 </head>
 <body>
 <div class="card">
-    <!-- Меняем h2 на h1 для заголовка на странице, но оставляем суть -->
     <h1>
         ⚙️ Фреза линейка
         <span>подача мм/сек · мм/мин</span>
@@ -246,11 +314,10 @@
             <button class="btn-reset" id="resetPointBtn">⟲ вернуть в 0</button>
         </div>
         <div class="legend">
-            <!-- Добавил ключевые слова в текст для пущей важности -->
             <span>Точка фрезы · скорость <span id="currentSpeedValue">30</span> <span id="currentUnitLabel">мм/сек</span></span>
         </div>
     </div>
-    <footer>фреза линейка · визуализация скорости подачи</footer>
+    <footer>фреза линейка · визуализация скорости подачи для ЧПУ</footer>
 </div>
 
 <script>
@@ -373,6 +440,9 @@
             posDisplay.innerText = `📍 ${pointPosMm.toFixed(2)} мм`;
             currentSpeedSpan.innerText = speedInput.value;
             currentUnitLabel.innerText = (speedUnit === 'sec') ? 'мм/сек' : 'мм/мин';
+            
+            // Обновляем title страницы для поисковиков (динамически)
+            document.title = `Фреза линейка — ${speedInput.value} ${speedUnit === 'sec' ? 'мм/сек' : 'мм/мин'} | визуализация ЧПУ`;
         }
 
         function resetPoint() {
