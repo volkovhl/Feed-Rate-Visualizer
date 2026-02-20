@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <!-- Важно для мобильных устройств -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Заголовок для поисковиков (Title) -->
+    <title>Фреза линейка — визуализация скорости подачи (мм/сек, мм/мин)</title>
+    <!-- Мета-описание для поиска -->
+    <meta name="description" content="Фреза и линейка: визуальный симулятор движения. Наблюдайте за скоростью подачи в реальном времени. Переключение между мм/сек и мм/мин.">
+    <!-- Ключевые слова (необязательно, но можно добавить) -->
+    <meta name="keywords" content="фреза линейка, скорость фрезы, визуализация подачи, симулятор фрезы, мм/сек, мм/мин, ЧПУ">
+    
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        body {
+            background: linear-gradient(145deg, #e9eef3 0%, #dae1ea 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 20px;
+        }
+        .card {
+            max-width: 900px;
+            width: 100%;
+            background: rgba(255,255,255,0.75);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 42px;
+            box-shadow: 0 30px 50px -20px #1f3a5f;
+            padding: 30px 25px 35px 25px;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+        h1 {
+            margin: 0 0 8px 0;
+            font-weight: 540;
+            color: #0a2647;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.9rem;
+            letter-spacing: -0.3px;
+        }
+        h1 span {
+            background: #1f3f6f;
+            color: white;
+            font-size: 0.95rem;
+            padding: 6px 20px;
+            border-radius: 60px;
+            font-weight: 460;
+        }
+        .control-panel {
+            background: #ffffffc9;
+            border-radius: 60px;
+            padding: 16px 25px;
+            margin: 20px 0 30px 0;
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            border: 1px solid #ffffff;
+            box-shadow: 0 8px 18px -8px #1e3b5b20;
+        }
+        .speed-box {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: white;
+            padding: 6px 16px 6px 22px;
+            border-radius: 40px;
+            box-shadow: inset 0 1px 4px #a1b5cc, 0 4px 10px #c1d2e4;
+        }
+        .speed-box label {
+            font-weight: 560;
+            color: #10345e;
+            letter-spacing: 0.2px;
+        }
+        .speed-box input {
+            font-size: 1.3rem;
+            width: 100px;
+            padding: 10px 5px 10px 18px;
+            border: none;
+            border-left: 2px solid #a7bdd5;
+            outline: none;
+            font-weight: 650;
+            color: #002856;
+            background: transparent;
+        }
+        .speed-box input:focus {
+            border-left-color: #d03f6b;
+        }
+        .unit-selector {
+            display: flex;
+            background: #e6edf6;
+            border-radius: 40px;
+            padding: 5px;
+            gap: 8px;
+        }
+        .unit-btn {
+            border: none;
+            background: transparent;
+            font-size: 1.1rem;
+            font-weight: 520;
+            padding: 10px 28px;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: 0.15s;
+            color: #1f3c5f;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .unit-btn.active-speed {
+            background: white;
+            box-shadow: 0 6px 14px rgba(25, 60, 100, 0.25);
+            color: #bb2f51;
+            font-weight: 650;
+        }
+        .ruler-container {
+            background: #eef3f9;
+            padding: 30px 20px 20px 20px;
+            border-radius: 60px 60px 40px 40px;
+            box-shadow: inset 0 -2px 6px #bacde2, 0 12px 18px -12px #0b2b44;
+        }
+        .ruler-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding: 0 15px;
+            color: #1c3f64;
+            font-weight: 570;
+            font-size: 1.1rem;
+        }
+        .canvas-wrapper {
+            position: relative;
+            width: 100%;
+            overflow-x: auto;
+            overflow-y: visible;
+            border-radius: 28px;
+            background: #ffffff;
+            box-shadow: 0 2px 8px rgba(0,30,60,0.2);
+            padding: 22px 0 20px 0;
+        }
+        canvas#rulerCanvas {
+            display: block;
+            width: auto;
+            height: auto;
+            background: white;
+            border-radius: 18px;
+            pointer-events: none;
+        }
+        .info-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin: 18px 8px 0 8px;
+            background: #d4e1f2;
+            padding: 10px 25px;
+            border-radius: 60px;
+            color: #10355e;
+        }
+        .readout {
+            background: #1f344f;
+            color: white;
+            padding: 8px 30px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            box-shadow: inset 0 3px 8px #6783a5;
+        }
+        .btn-reset {
+            background: white;
+            border: none;
+            border-radius: 40px;
+            padding: 8px 28px;
+            font-weight: 600;
+            color: #b61e4a;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,45,80,0.2);
+            transition: 0.1s;
+            border: 1px solid #b3cae3;
+            font-size: 0.95rem;
+        }
+        .btn-reset:hover {
+            background: #ffeaf1;
+        }
+        .legend {
+            display: flex;
+            gap: 30px;
+            font-size: 0.95rem;
+            color: #1a3c62;
+            margin-top: 12px;
+            padding-left: 20px;
+            align-items: center;
+        }
+        .legend span::before {
+            content: "⏺";
+            color: #cf1850;
+            font-size: 1rem;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+        footer {
+            font-size: 0.85rem;
+            color: #6181a6;
+            text-align: center;
+            margin-top: 25px;
+        }
+    </style>
+</head>
+<body>
+<div class="card">
+    <!-- Меняем h2 на h1 для заголовка на странице, но оставляем суть -->
+    <h1>
+        ⚙️ Фреза линейка
+        <span>подача мм/сек · мм/мин</span>
+    </h1>
+
+    <div class="control-panel">
+        <div class="speed-box">
+            <label>⚡ скорость</label>
+            <input type="number" id="speedInput" value="30" min="0.1" max="2000" step="1">
+        </div>
+        <div class="unit-selector" id="speedUnitGroup">
+            <button id="unitMmSec" class="unit-btn active-speed">мм/сек</button>
+            <button id="unitMmMin" class="unit-btn">мм/мин</button>
+        </div>
+    </div>
+
+    <div class="ruler-container">
+        <div class="ruler-header">
+            <span>0 мм</span>
+            <span>200 мм</span>
+        </div>
+        <div class="canvas-wrapper" id="canvasWrapper">
+            <canvas id="rulerCanvas" width="780" height="160"></canvas>
+        </div>
+
+        <div class="info-bar">
+            <div class="readout" id="posDisplay">📍 0.0 мм</div>
+            <button class="btn-reset" id="resetPointBtn">⟲ вернуть в 0</button>
+        </div>
+        <div class="legend">
+            <!-- Добавил ключевые слова в текст для пущей важности -->
+            <span>Точка фрезы · скорость <span id="currentSpeedValue">30</span> <span id="currentUnitLabel">мм/сек</span></span>
+        </div>
+    </div>
+    <footer>фреза линейка · визуализация скорости подачи</footer>
+</div>
+
+<script>
+    (function() {
+        const MM_LENGTH = 200;
+        const PX_PER_MM = 3.2;
+        const START_OFFSET = 40;
+
+        const canvas = document.getElementById('rulerCanvas');
+        const ctx = canvas.getContext('2d');
+        const wrapper = document.getElementById('canvasWrapper');
+
+        const speedInput = document.getElementById('speedInput');
+        const unitMmSec = document.getElementById('unitMmSec');
+        const unitMmMin = document.getElementById('unitMmMin');
+        const posDisplay = document.getElementById('posDisplay');
+        const currentSpeedSpan = document.getElementById('currentSpeedValue');
+        const currentUnitLabel = document.getElementById('currentUnitLabel');
+
+        const resetBtn = document.getElementById('resetPointBtn');
+
+        let speedUnit = 'sec';
+        let pointPosMm = 0;
+        let lastTimestamp = null;
+        let animFrame = null;
+        let isRunning = true;
+
+        function setCanvasSize() {
+            const contentWidth = MM_LENGTH * PX_PER_MM;
+            const totalWidth = Math.max(700, contentWidth + 90);
+            canvas.width = totalWidth;
+            canvas.height = 160;
+        }
+
+        function drawRuler() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            const startX = START_OFFSET;
+            const endX = startX + MM_LENGTH * PX_PER_MM;
+            const yLine = 95;
+
+            ctx.beginPath();
+            ctx.lineWidth = 7;
+            ctx.strokeStyle = '#1f4172';
+            ctx.moveTo(startX, yLine);
+            ctx.lineTo(endX, yLine);
+            ctx.stroke();
+
+            ctx.fillStyle = '#03223f';
+            ctx.font = 'bold 14px "JetBrains Mono", monospace';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'bottom';
+
+            for (let mm = 0; mm <= MM_LENGTH; mm++) {
+                let x = startX + mm * PX_PER_MM;
+                if (x < startX || x > endX) continue;
+
+                let height = 15;
+                let lineW = 1.5;
+                let isMajor = false;
+
+                if (mm % 10 === 0) {
+                    height = 34;
+                    lineW = 3.5;
+                    isMajor = true;
+                } else if (mm % 5 === 0) {
+                    height = 26;
+                    lineW = 2.5;
+                } else {
+                    height = 18;
+                    lineW = 1.5;
+                }
+
+                ctx.beginPath();
+                ctx.moveTo(x, yLine - height);
+                ctx.lineTo(x, yLine + 4);
+                ctx.strokeStyle = isMajor ? '#14375c' : '#597b9f';
+                ctx.lineWidth = lineW;
+                ctx.stroke();
+
+                if (isMajor) {
+                    ctx.fillStyle = '#0a2e50';
+                    ctx.font = 'bold 15px "Segoe UI", monospace';
+                    if (mm === 0 || mm === 50 || mm === 100 || mm === 150 || mm === 200) {
+                        ctx.fillText(mm + ' мм', x, yLine - 48);
+                    }
+                }
+            }
+        }
+
+        function drawPoint() {
+            const startX = START_OFFSET;
+            const x = startX + pointPosMm * PX_PER_MM;
+            const y = 80;
+            const pointRadius = 5;
+
+            ctx.beginPath();
+            ctx.arc(x, y, pointRadius, 0, 2 * Math.PI);
+            ctx.fillStyle = '#cf1f4e';
+            ctx.shadowColor = '#9e1040';
+            ctx.shadowBlur = 8;
+            ctx.fill();
+            ctx.shadowBlur = 0;
+            ctx.strokeStyle = '#fffbe6';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            ctx.beginPath();
+            ctx.arc(x-1.5, y-1.5, 1.8, 0, 2*Math.PI);
+            ctx.fillStyle = '#ff9eb5';
+            ctx.fill();
+        }
+
+        function redrawCanvas() {
+            drawRuler();
+            drawPoint();
+        }
+
+        function updateLabel() {
+            posDisplay.innerText = `📍 ${pointPosMm.toFixed(2)} мм`;
+            currentSpeedSpan.innerText = speedInput.value;
+            currentUnitLabel.innerText = (speedUnit === 'sec') ? 'мм/сек' : 'мм/мин';
+        }
+
+        function resetPoint() {
+            pointPosMm = 0;
+            lastTimestamp = null;
+            redrawCanvas();
+            updateLabel();
+        }
+
+        function animation(now) {
+            if (!isRunning) return;
+
+            if (lastTimestamp !== null) {
+                const deltaSec = (now - lastTimestamp) / 1000;
+
+                let speedVal = parseFloat(speedInput.value) || 0;
+                if (speedVal < 0) speedVal = 0;
+
+                let speedMmPerSec = speedVal;
+                if (speedUnit === 'min') {
+                    speedMmPerSec = speedVal / 60.0;
+                }
+
+                let maxStep = 20.0;
+                let deltaPos = Math.min(speedMmPerSec * deltaSec, maxStep);
+                if (deltaPos > 0.0001) {
+                    pointPosMm += deltaPos;
+                }
+
+                if (pointPosMm >= MM_LENGTH) {
+                    pointPosMm = 0.0;
+                }
+            }
+
+            lastTimestamp = now;
+            redrawCanvas();
+            updateLabel();
+
+            animFrame = requestAnimationFrame(animation);
+        }
+
+        unitMmSec.addEventListener('click', () => {
+            if (speedUnit === 'sec') return;
+            speedUnit = 'sec';
+            unitMmSec.classList.add('active-speed');
+            unitMmMin.classList.remove('active-speed');
+            updateLabel();
+        });
+
+        unitMmMin.addEventListener('click', () => {
+            if (speedUnit === 'min') return;
+            speedUnit = 'min';
+            unitMmMin.classList.add('active-speed');
+            unitMmSec.classList.remove('active-speed');
+            updateLabel();
+        });
+
+        speedInput.addEventListener('input', updateLabel);
+        resetBtn.addEventListener('click', resetPoint);
+
+        setCanvasSize();
+        resetPoint();
+        animFrame = requestAnimationFrame(animation);
+
+        window.addEventListener('beforeunload', () => {
+            if (animFrame) cancelAnimationFrame(animFrame);
+        });
+
+        window.addEventListener('resize', () => {
+            redrawCanvas();
+        });
+    })();
+</script>
+</body>
+</html>
