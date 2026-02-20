@@ -18,3 +18,6 @@
 Всё работает в одном HTML-файле. Никаких серверов и зависимостей.
 1.  Скачайте файл [index.html](https://github.com/volkovhl/Feed-Rate-Visualizer/archive/refs/heads/main.zip)
 2.  Откройте его в любом современном браузере (Chrome, Firefox, Edge).
+
+## Автор
+Pavel Volkov
