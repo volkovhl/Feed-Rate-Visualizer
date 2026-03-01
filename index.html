@@ -838,30 +838,22 @@
 
                 e.preventDefault();
 
-                // Получаем координаты касания/клика
                 const clientX = e.type.startsWith('touch') ? e.touches[0].clientX : e.clientX;
-
-                // Получаем позицию canvas
                 const rect = canvas.getBoundingClientRect();
                 const scaleX = canvas.width / rect.width;
-
-                // Вычисляем текущую позицию в пикселях canvas
                 const canvasX = (clientX - rect.left) * scaleX;
-
-                // Вычисляем смещение в пикселях
                 const deltaPx = canvasX - dragStartX;
-
-                // Переводим в миллиметры
                 const deltaMm = deltaPx / PX_PER_MM;
 
-                // Новая позиция с ограничениями
                 let newPos = dragStartPos + deltaMm;
                 newPos = Math.max(0, Math.min(MM_LENGTH, newPos));
 
-                // Обновляем позицию
+                // Обновляем время при перетаскивании
+                let speedMmPerSec = getSpeedInMmPerSec();
+                updateElapsedTimeForManualMove(pointPosMm, newPos, speedMmPerSec);
+
                 pointPosMm = newPos;
-                applySnap()
-                // Перерисовываем
+                applySnap();
                 redrawCanvas();
                 updateLabel();
             }
@@ -878,7 +870,7 @@
                     animFrame = requestAnimationFrame(animation);
                 }
             }
-            // Функция для форматирования дюймов в дроби
+
             // Функция для форматирования дюймов в дроби
             function formatInchFraction(inches) {
                 let whole = Math.floor(inches);
@@ -1064,13 +1056,36 @@
                 }
                 return 0;
             }
+            function getSpeedInMmPerSec() {
+                let speedVal = parseFloat(speedInput.value) || 0;
+                if (speedVal < 0) speedVal = 0;
 
-            // Добавьте переменные для хранения предыдущих значений
+                if (speedUnit === 'sec') {
+                    return speedVal;
+                } else if (speedUnit === 'min') {
+                    return speedVal / 60.0;
+                } else if (speedUnit === 'inch') {
+                    return (speedVal * INCH_TO_MM) / 60.0;
+                }
+                return 0;
+            }
+
+            // обновления времени при ручных перемещениях
+            function updateElapsedTimeForManualMove(oldPos, newPos, speedMmPerSec) {
+                if (speedMmPerSec > 0) {
+                    // Вычисляем время на основе пройденного расстояния и текущей скорости
+                    let distance = Math.abs(newPos - oldPos);
+                    let timeForMove = distance / speedMmPerSec;
+                    elapsedTimeSec += timeForMove;
+                }
+            }
+
+            // Переменные для хранения предыдущих значений
             let lastPosValue = -1;
             let lastInchValue = -1;
             let lastTimeValue = -1;
 
-            // В функции updateLabel() замените на это
+
             function updateLabel() {
                 // Показываем позицию в мм
                 let posText = `📍 ${pointPosMm.toFixed(2)} мм`;
@@ -1124,7 +1139,7 @@
                 updateLabel();
             }
 
-            // Добавьте в функцию togglePlayPause()
+
             function togglePlayPause() {
                 isRunning = !isRunning;
                 if (isRunning) {
@@ -1160,14 +1175,19 @@
             function jogShort(direction) {
                 if (isRunning) return;
 
+                let oldPos = pointPosMm;
+
                 if (direction === 'left') {
                     pointPosMm = Math.max(0, pointPosMm - JOG_STEP_SHORT);
                 } else {
                     pointPosMm = Math.min(MM_LENGTH, pointPosMm + JOG_STEP_SHORT);
                 }
 
-                applySnap();
+                // Обновляем время при ручном перемещении
+                let speedMmPerSec = getSpeedInMmPerSec();
+                updateElapsedTimeForManualMove(oldPos, pointPosMm, speedMmPerSec);
 
+                applySnap();
                 redrawCanvas();
                 updateLabel();
             }
@@ -1227,11 +1247,19 @@
 
                     let deltaPos = jogSpeed * deltaSec;
 
+                    let oldPos = pointPosMm;
+
                     if (activeJogDirection === 'left') {
                         pointPosMm = Math.max(0, pointPosMm - deltaPos);
                     } else {
                         pointPosMm = Math.min(MM_LENGTH, pointPosMm + deltaPos);
                     }
+
+                    // Время уже считается через deltaSec в этом режиме
+                    if (!isRunning) {
+                        elapsedTimeSec += deltaSec;
+                    }
+
                     applySnap();
                     redrawCanvas();
                     updateLabel();
