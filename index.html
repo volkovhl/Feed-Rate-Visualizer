@@ -14,7 +14,6 @@
         content="фреза линейка, скорость подачи фрезы, визуализация подачи, симулятор фрезы, мм/сек, мм/мин, дюймы, ЧПУ, настройка станка, подача инструмента, фрезерование">
     <meta name="robots" content="index, follow">
     <meta name="author" content="Павел Волков">
-    <meta name="yandex-verification" content="ваш_код_верификации"> <!-- Для Яндекс.Вебмастера -->
 
     <!-- Open Graph для VK и других российских соцсетей -->
     <meta property="og:title" content="Фреза линейка — симулятор скорости подачи онлайн">
@@ -189,7 +188,6 @@
             box-shadow: 0 2px 8px rgba(0, 30, 60, 0.2);
             padding: 22px 0 20px 0;
             touch-action: pan-x pinch-zoom;
-            /* разрешаем горизонтальный скролл, но не вертикальный */
         }
 
         canvas#rulerCanvas {
@@ -199,10 +197,8 @@
             background: white;
             border-radius: 18px;
             pointer-events: auto;
-            /* меняем с none на auto для захвата событий */
             cursor: grab;
             touch-action: none;
-            /* отключаем стандартные жесты на canvas */
         }
 
         canvas#rulerCanvas.dragging {
@@ -222,7 +218,6 @@
             gap: 15px;
         }
 
-        /* Добавьте в стили после .readouts-group */
         .readouts-group {
             display: flex;
             gap: 15px;
@@ -230,7 +225,6 @@
             align-items: center;
         }
 
-        /*  блок стилей .readout  */
         .readout {
             background: #1f344f;
             color: white;
@@ -243,18 +237,13 @@
             align-items: center;
             gap: 8px;
             min-width: 160px;
-            /* увеличил для стабильности */
             justify-content: center;
             transition: none;
             will-change: auto;
-            /* отключаем оптимизацию GPU */
             backface-visibility: hidden;
-            /* фикс для Chrome */
             -webkit-font-smoothing: antialiased;
             font-family: 'Courier New', monospace;
-            /* моноширинный для всех */
             letter-spacing: 0.5px;
-            /* небольшой интервал для читаемости */
         }
 
         .time-readout {
@@ -266,7 +255,6 @@
             background: #2a4f3c;
             font-size: 0.95rem;
             min-width: 180px;
-            /* ещё шире для дюймов */
         }
 
         .controls-group {
@@ -707,6 +695,7 @@
             let activeJogDirection = null; // 'left' или 'right'
             let jogSpeed = 0; // текущая скорость перемотки
             let lastJogTime = null;
+
             // Переменные для перетаскивания
             let isDragging = false;
             let dragStartX = 0;
@@ -748,10 +737,53 @@
                 return value;
             }
 
-            // Функция для применения привязки
-            function applySnap() {
+            // НОВАЯ ФУНКЦИЯ: обновление времени и позиции с учетом snap
+            function updateTimeAndPosition(deltaPos, speedMmPerSec) {
+                if (Math.abs(deltaPos) < 0.000001) return;
+
+                // Сохраняем старую позицию
+                let oldPos = pointPosMm;
+
+                // Сначала применяем перемещение
+                let newPos = oldPos + deltaPos;
+
+                // Проверяем границы
+                if (newPos < 0) {
+                    newPos = 0;
+                } else if (newPos > MM_LENGTH) {
+                    newPos = MM_LENGTH;
+                }
+
+                // Применяем привязку к новой позиции
+                let snappedPos = newPos;
                 if (snapMode !== 0) {
-                    pointPosMm = snapToGrid(pointPosMm, snapMode);
+                    snappedPos = snapToGrid(newPos, snapMode);
+                }
+
+                // Вычисляем реальное изменение позиции с учетом snap
+                let actualDelta = snappedPos - oldPos;
+
+                // Обновляем время на основе реального перемещения
+                if (speedMmPerSec > 0) {
+                    elapsedTimeSec += actualDelta / speedMmPerSec;
+
+                    // Защита от отрицательного времени
+                    if (elapsedTimeSec < 0) {
+                        elapsedTimeSec = 0;
+                    }
+                }
+
+                // Устанавливаем новую позицию (уже с snap)
+                pointPosMm = snappedPos;
+            }
+
+            // Функция для применения привязки (без изменения времени)
+            function applySnapOnly() {
+                if (snapMode !== 0) {
+                    let snappedPos = snapToGrid(pointPosMm, snapMode);
+                    // ВАЖНО: не обновляем время при простом применении snap
+                    // Это используется только при ручном изменении режима привязки
+                    pointPosMm = snappedPos;
                     redrawCanvas();
                     updateLabel();
                 }
@@ -790,7 +822,7 @@
                     }
 
                     // Применяем привязку к текущей позиции
-                    applySnap();
+                    applySnapOnly();
 
                     // Закрываем меню
                     snapMenuVisible = false;
@@ -848,12 +880,37 @@
                 let newPos = dragStartPos + deltaMm;
                 newPos = Math.max(0, Math.min(MM_LENGTH, newPos));
 
-                // Обновляем время при перетаскивании
+                // ИСПРАВЛЕНИЕ: используем новую функцию для обновления времени и позиции
                 let speedMmPerSec = getSpeedInMmPerSec();
-                updateElapsedTimeForManualMove(pointPosMm, newPos, speedMmPerSec);
 
-                pointPosMm = newPos;
-                applySnap();
+                // При перетаскивании deltaPos = newPos - pointPosMm
+                // Но pointPosMm еще не обновлен, поэтому используем dragStartPos
+                let deltaFromCurrent = newPos - pointPosMm;
+
+                // Обновляем время и позицию с учетом snap
+                if (Math.abs(deltaFromCurrent) > 0.000001) {
+                    // Сохраняем старую позицию
+                    let oldPos = pointPosMm;
+
+                    // Применяем привязку к новой позиции
+                    let snappedPos = newPos;
+                    if (snapMode !== 0) {
+                        snappedPos = snapToGrid(newPos, snapMode);
+                    }
+
+                    // Вычисляем реальное изменение
+                    let actualDelta = snappedPos - oldPos;
+
+                    // Обновляем время
+                    if (speedMmPerSec > 0) {
+                        elapsedTimeSec += actualDelta / speedMmPerSec;
+                        if (elapsedTimeSec < 0) elapsedTimeSec = 0;
+                    }
+
+                    // Устанавливаем новую позицию
+                    pointPosMm = snappedPos;
+                }
+
                 redrawCanvas();
                 updateLabel();
             }
@@ -887,7 +944,7 @@
                 }
 
                 // Представляем дробь в 32-х долях (максимальная точность)
-                let denominator = 32; // можно увеличить до 64, 128 для большей точности
+                let denominator = 32;
                 let numerator = Math.round(fraction * denominator);
 
                 // Сокращаем дробь
@@ -1056,35 +1113,11 @@
                 }
                 return 0;
             }
-            function getSpeedInMmPerSec() {
-                let speedVal = parseFloat(speedInput.value) || 0;
-                if (speedVal < 0) speedVal = 0;
-
-                if (speedUnit === 'sec') {
-                    return speedVal;
-                } else if (speedUnit === 'min') {
-                    return speedVal / 60.0;
-                } else if (speedUnit === 'inch') {
-                    return (speedVal * INCH_TO_MM) / 60.0;
-                }
-                return 0;
-            }
-
-            // обновления времени при ручных перемещениях
-            function updateElapsedTimeForManualMove(oldPos, newPos, speedMmPerSec) {
-                if (speedMmPerSec > 0) {
-                    // Вычисляем время на основе пройденного расстояния и текущей скорости
-                    let distance = Math.abs(newPos - oldPos);
-                    let timeForMove = distance / speedMmPerSec;
-                    elapsedTimeSec += timeForMove;
-                }
-            }
 
             // Переменные для хранения предыдущих значений
             let lastPosValue = -1;
             let lastInchValue = -1;
             let lastTimeValue = -1;
-
 
             function updateLabel() {
                 // Показываем позицию в мм
@@ -1139,7 +1172,6 @@
                 updateLabel();
             }
 
-
             function togglePlayPause() {
                 isRunning = !isRunning;
                 if (isRunning) {
@@ -1175,19 +1207,12 @@
             function jogShort(direction) {
                 if (isRunning) return;
 
-                let oldPos = pointPosMm;
-
-                if (direction === 'left') {
-                    pointPosMm = Math.max(0, pointPosMm - JOG_STEP_SHORT);
-                } else {
-                    pointPosMm = Math.min(MM_LENGTH, pointPosMm + JOG_STEP_SHORT);
-                }
-
-                // Обновляем время при ручном перемещении
                 let speedMmPerSec = getSpeedInMmPerSec();
-                updateElapsedTimeForManualMove(oldPos, pointPosMm, speedMmPerSec);
+                let deltaPos = (direction === 'left' ? -JOG_STEP_SHORT : JOG_STEP_SHORT);
 
-                applySnap();
+                // ИСПРАВЛЕНИЕ: используем новую функцию для обновления времени и позиции
+                updateTimeAndPosition(deltaPos, speedMmPerSec);
+
                 redrawCanvas();
                 updateLabel();
             }
@@ -1246,21 +1271,14 @@
                     jogSpeed = Math.min(JOG_MAX_SPEED, jogSpeed + JOG_ACCELERATION * deltaSec);
 
                     let deltaPos = jogSpeed * deltaSec;
-
-                    let oldPos = pointPosMm;
-
                     if (activeJogDirection === 'left') {
-                        pointPosMm = Math.max(0, pointPosMm - deltaPos);
-                    } else {
-                        pointPosMm = Math.min(MM_LENGTH, pointPosMm + deltaPos);
+                        deltaPos = -deltaPos;
                     }
 
-                    // Время уже считается через deltaSec в этом режиме
-                    if (!isRunning) {
-                        elapsedTimeSec += deltaSec;
-                    }
+                    // ИСПРАВЛЕНИЕ: используем новую функцию для обновления времени и позиции
+                    let speedMmPerSec = getSpeedInMmPerSec();
+                    updateTimeAndPosition(deltaPos, speedMmPerSec);
 
-                    applySnap();
                     redrawCanvas();
                     updateLabel();
                 }
@@ -1279,13 +1297,16 @@
 
                     let maxStep = 20.0;
                     let deltaPos = Math.min(speedMmPerSec * deltaSec, maxStep);
-                    if (deltaPos > 0.0001) {
-                        pointPosMm += deltaPos;
-                        elapsedTimeSec += deltaSec;
+
+                    // ИСПРАВЛЕНИЕ: используем новую функцию для обновления времени и позиции
+                    if (deltaPos > 0.000001) {
+                        updateTimeAndPosition(deltaPos, speedMmPerSec);
                     }
-                    applySnap();
+
                     if (pointPosMm >= MM_LENGTH) {
                         pointPosMm = 0.0;
+                        // При сбросе позиции в 0 не сбрасываем время автоматически
+                        // Время продолжает идти, так как фреза прошла полный цикл
                     }
                 }
 
@@ -1295,6 +1316,7 @@
 
                 animFrame = requestAnimationFrame(animation);
             }
+
             // Обработчики для кнопок единиц измерения
             unitMmSec.addEventListener('click', () => {
                 if (speedUnit === 'sec') return;
@@ -1364,6 +1386,7 @@
 
             // Предотвращаем выделение текста при перетаскивании
             canvas.addEventListener('dragstart', (e) => e.preventDefault());
+
             setCanvasSize();
             resetPoint();
             animFrame = requestAnimationFrame(animation);
