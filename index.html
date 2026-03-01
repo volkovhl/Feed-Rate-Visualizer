@@ -1,21 +1,25 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <!-- Важно для мобильных устройств -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
-    
+
     <!-- Основные SEO-теги для России -->
-    <title>Фреза линейка — визуализация скорости подачи (мм/сек, мм/мин) для ЧПУ</title>
-    <meta name="description" content="Бесплатный визуальный симулятор движения фрезы по линейке. Наблюдайте за скоростью подачи в реальном времени. Переключение между мм/сек и мм/мин. Для настройки ЧПУ станков и обучения.">
-    <meta name="keywords" content="фреза линейка, скорость подачи фрезы, визуализация подачи, симулятор фрезы, мм/сек, мм/мин, ЧПУ, настройка станка, подача инструмента, фрезерование">
+    <title>Фреза линейка — визуализация скорости подачи (мм/сек, мм/мин, дюймы) для ЧПУ</title>
+    <meta name="description"
+        content="Бесплатный визуальный симулятор движения фрезы по линейке. Наблюдайте за скоростью подачи в реальном времени. Переключение между мм/сек, мм/мин и дюймами. Для настройки ЧПУ станков и обучения.">
+    <meta name="keywords"
+        content="фреза линейка, скорость подачи фрезы, визуализация подачи, симулятор фрезы, мм/сек, мм/мин, дюймы, ЧПУ, настройка станка, подача инструмента, фрезерование">
     <meta name="robots" content="index, follow">
     <meta name="author" content="Павел Волков">
     <meta name="yandex-verification" content="ваш_код_верификации"> <!-- Для Яндекс.Вебмастера -->
-    
+
     <!-- Open Graph для VK и других российских соцсетей -->
     <meta property="og:title" content="Фреза линейка — симулятор скорости подачи онлайн">
-    <meta property="og:description" content="Визуализация движения фрезы по линейке. Регулировка скорости, переключение мм/сек и мм/мин. Идеально для настройки ЧПУ.">
+    <meta property="og:description"
+        content="Визуализация движения фрезы по линейке. Регулировка скорости, переключение мм/сек, мм/мин и дюймов. Идеально для настройки ЧПУ.">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://volkovhl.github.io/freza-lineyka/">
     <meta property="og:site_name" content="Фреза линейка — симулятор ЧПУ">
@@ -24,18 +28,20 @@
     <meta property="og:image:height" content="630">
     <meta property="og:image:alt" content="Визуализация движения фрезы по линейке">
     <meta property="og:locale" content="ru_RU">
-    
+
     <!-- VK (поддержка картинок) -->
     <meta property="vk:image" content="https://volkovhl.github.io/freza-lineyka/screenshot-freza.png">
-    
+
     <!-- Favicon (эмодзи-иконка для простоты) -->
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚙️</text></svg>">
-    
+    <link rel="icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚙️</text></svg>">
+
     <style>
         * {
             box-sizing: border-box;
             font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         }
+
         body {
             background: linear-gradient(145deg, #e9eef3 0%, #dae1ea 100%);
             display: flex;
@@ -44,17 +50,19 @@
             min-height: 100vh;
             margin: 20px;
         }
+
         .card {
-            max-width: 900px;
+            max-width: 1000px;
             width: 100%;
-            background: rgba(255,255,255,0.75);
+            background: rgba(255, 255, 255, 0.75);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border-radius: 42px;
             box-shadow: 0 30px 50px -20px #1f3a5f;
             padding: 30px 25px 35px 25px;
-            border: 1px solid rgba(255,255,255,0.5);
+            border: 1px solid rgba(255, 255, 255, 0.5);
         }
+
         h1 {
             margin: 0 0 8px 0;
             font-weight: 540;
@@ -66,6 +74,7 @@
             letter-spacing: -0.3px;
             flex-wrap: wrap;
         }
+
         h1 span {
             background: #1f3f6f;
             color: white;
@@ -74,6 +83,7 @@
             border-radius: 60px;
             font-weight: 460;
         }
+
         .control-panel {
             background: #ffffffc9;
             border-radius: 60px;
@@ -87,6 +97,7 @@
             border: 1px solid #ffffff;
             box-shadow: 0 8px 18px -8px #1e3b5b20;
         }
+
         .speed-box {
             display: flex;
             align-items: center;
@@ -96,11 +107,13 @@
             border-radius: 40px;
             box-shadow: inset 0 1px 4px #a1b5cc, 0 4px 10px #c1d2e4;
         }
+
         .speed-box label {
             font-weight: 560;
             color: #10345e;
             letter-spacing: 0.2px;
         }
+
         .speed-box input {
             font-size: 1.3rem;
             width: 100px;
@@ -112,9 +125,11 @@
             color: #002856;
             background: transparent;
         }
+
         .speed-box input:focus {
             border-left-color: #d03f6b;
         }
+
         .unit-selector {
             display: flex;
             background: #e6edf6;
@@ -122,12 +137,13 @@
             padding: 5px;
             gap: 8px;
         }
+
         .unit-btn {
             border: none;
             background: transparent;
             font-size: 1.1rem;
             font-weight: 520;
-            padding: 10px 28px;
+            padding: 10px 20px;
             border-radius: 40px;
             cursor: pointer;
             transition: 0.15s;
@@ -135,19 +151,23 @@
             display: flex;
             align-items: center;
             gap: 6px;
+            white-space: nowrap;
         }
+
         .unit-btn.active-speed {
             background: white;
             box-shadow: 0 6px 14px rgba(25, 60, 100, 0.25);
             color: #bb2f51;
             font-weight: 650;
         }
+
         .ruler-container {
             background: #eef3f9;
             padding: 30px 20px 20px 20px;
             border-radius: 60px 60px 40px 40px;
             box-shadow: inset 0 -2px 6px #bacde2, 0 12px 18px -12px #0b2b44;
         }
+
         .ruler-header {
             display: flex;
             justify-content: space-between;
@@ -157,6 +177,8 @@
             font-weight: 570;
             font-size: 1.1rem;
         }
+
+
         .canvas-wrapper {
             position: relative;
             width: 100%;
@@ -164,17 +186,29 @@
             overflow-y: visible;
             border-radius: 28px;
             background: #ffffff;
-            box-shadow: 0 2px 8px rgba(0,30,60,0.2);
+            box-shadow: 0 2px 8px rgba(0, 30, 60, 0.2);
             padding: 22px 0 20px 0;
+            touch-action: pan-x pinch-zoom;
+            /* разрешаем горизонтальный скролл, но не вертикальный */
         }
+
         canvas#rulerCanvas {
             display: block;
             width: auto;
             height: auto;
             background: white;
             border-radius: 18px;
-            pointer-events: none;
+            pointer-events: auto;
+            /* меняем с none на auto для захвата событий */
+            cursor: grab;
+            touch-action: none;
+            /* отключаем стандартные жесты на canvas */
         }
+
+        canvas#rulerCanvas.dragging {
+            cursor: grabbing;
+        }
+
         .info-bar {
             display: flex;
             align-items: center;
@@ -184,16 +218,90 @@
             padding: 10px 25px;
             border-radius: 60px;
             color: #10355e;
+            flex-wrap: wrap;
+            gap: 15px;
         }
+
+        /* Добавьте в стили после .readouts-group */
+        .readouts-group {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        /*  блок стилей .readout  */
         .readout {
             background: #1f344f;
             color: white;
-            padding: 8px 30px;
+            padding: 8px 20px;
             border-radius: 40px;
             font-weight: 600;
             font-size: 1.1rem;
             box-shadow: inset 0 3px 8px #6783a5;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 160px;
+            /* увеличил для стабильности */
+            justify-content: center;
+            transition: none;
+            will-change: auto;
+            /* отключаем оптимизацию GPU */
+            backface-visibility: hidden;
+            /* фикс для Chrome */
+            -webkit-font-smoothing: antialiased;
+            font-family: 'Courier New', monospace;
+            /* моноширинный для всех */
+            letter-spacing: 0.5px;
+            /* небольшой интервал для читаемости */
         }
+
+        .time-readout {
+            background: #2a3f5c;
+            min-width: 140px;
+        }
+
+        .inch-readout {
+            background: #2a4f3c;
+            font-size: 0.95rem;
+            min-width: 180px;
+            /* ещё шире для дюймов */
+        }
+
+        .controls-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .btn-playpause {
+            background: white;
+            border: none;
+            border-radius: 40px;
+            padding: 8px 24px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 45, 80, 0.2);
+            transition: 0.1s;
+            border: 1px solid #b3cae3;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #1f344f;
+        }
+
+        .btn-playpause:hover {
+            background: #e6f0ff;
+        }
+
+        .btn-playpause.paused {
+            background: #ffebf0;
+            color: #b61e4a;
+        }
+
         .btn-reset {
             background: white;
             border: none;
@@ -202,14 +310,76 @@
             font-weight: 600;
             color: #b61e4a;
             cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0,45,80,0.2);
+            box-shadow: 0 4px 12px rgba(0, 45, 80, 0.2);
             transition: 0.1s;
             border: 1px solid #b3cae3;
             font-size: 0.95rem;
         }
+
         .btn-reset:hover {
             background: #ffeaf1;
         }
+
+        .btn-jog {
+            background: white;
+            border: none;
+            border-radius: 40px;
+            padding: 8px 18px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 45, 80, 0.15);
+            transition: 0.1s;
+            border: 1px solid #b3cae3;
+            font-size: 1.1rem;
+            color: #1f4172;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-jog:hover:not(:disabled) {
+            background: #e6f0ff;
+        }
+
+        .btn-jog:active:not(:disabled) {
+            transform: scale(0.98);
+            background: #d4e3ff;
+        }
+
+        .btn-jog:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: #f0f0f0;
+        }
+
+        .btn-jog.jog-fast {
+            background: #ffd5e5;
+            color: #b61e4a;
+            border-color: #ff9eb5;
+        }
+
+        .jog-group {
+            display: flex;
+            gap: 8px;
+            margin-left: 10px;
+        }
+
+        .jog-indicator {
+            font-size: 0.8rem;
+            color: #5a7a9c;
+            margin-left: 5px;
+        }
+
+        .jog-tip {
+            font-size: 0.7rem;
+            color: #6d8bb0;
+            display: flex;
+            gap: 15px;
+            margin-top: 5px;
+        }
+
         .legend {
             display: flex;
             gap: 30px;
@@ -220,6 +390,7 @@
             align-items: center;
             flex-wrap: wrap;
         }
+
         .legend span::before {
             content: "⏺";
             color: #cf1850;
@@ -227,294 +398,949 @@
             margin-right: 6px;
             vertical-align: middle;
         }
+
         footer {
             font-size: 0.85rem;
             color: #6181a6;
             text-align: center;
             margin-top: 25px;
         }
-        
+
         /* Адаптация для мобильных */
         @media (max-width: 600px) {
             body {
                 margin: 10px;
             }
+
             .card {
                 padding: 20px 15px;
             }
+
             h1 {
                 font-size: 1.5rem;
             }
+
             .control-panel {
                 padding: 15px;
             }
+
             .speed-box {
                 width: 100%;
                 justify-content: space-between;
             }
+
             .speed-box input {
                 width: 80px;
             }
+
             .unit-selector {
                 width: 100%;
                 justify-content: center;
             }
+
             .unit-btn {
-                padding: 10px 20px;
-                font-size: 1rem;
+                padding: 8px 12px;
+                font-size: 0.9rem;
             }
+
             .info-bar {
                 flex-direction: column;
-                gap: 10px;
                 padding: 15px;
             }
-            .readout {
+
+            .readouts-group {
                 width: 100%;
+                justify-content: center;
+            }
+
+            .controls-group {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .btn-reset,
+            .btn-playpause,
+            .btn-jog {
+                flex: 1;
+                justify-content: center;
+            }
+
+            .jog-group {
+                width: 100%;
+                justify-content: center;
+                margin-left: 0;
+                margin-top: 5px;
+            }
+
+            .jog-tip {
+                flex-direction: column;
+                gap: 5px;
                 text-align: center;
             }
-            .btn-reset {
-                width: 100%;
-            }
+
             .legend {
                 justify-content: center;
                 padding-left: 0;
             }
         }
-    </style>
-</head>
-<body>
-<div class="card">
-    <h1>
-        ⚙️ Фреза линейка
-        <span>подача мм/сек · мм/мин</span>
-    </h1>
 
-    <div class="control-panel">
-        <div class="speed-box">
-            <label>⚡ скорость</label>
-            <input type="number" id="speedInput" value="30" min="0.1" max="2000" step="1">
-        </div>
-        <div class="unit-selector" id="speedUnitGroup">
-            <button id="unitMmSec" class="unit-btn active-speed">мм/сек</button>
-            <button id="unitMmMin" class="unit-btn">мм/мин</button>
-        </div>
-    </div>
-
-    <div class="ruler-container">
-        <div class="ruler-header">
-            <span>0 мм</span>
-            <span>200 мм</span>
-        </div>
-        <div class="canvas-wrapper" id="canvasWrapper">
-            <canvas id="rulerCanvas" width="780" height="160"></canvas>
-        </div>
-
-        <div class="info-bar">
-            <div class="readout" id="posDisplay">📍 0.0 мм</div>
-            <button class="btn-reset" id="resetPointBtn">⟲ вернуть в 0</button>
-        </div>
-        <div class="legend">
-            <span>Точка фрезы · скорость <span id="currentSpeedValue">30</span> <span id="currentUnitLabel">мм/сек</span></span>
-        </div>
-    </div>
-    <footer>фреза линейка · визуализация скорости подачи для ЧПУ</footer>
-</div>
-
-<script>
-    (function() {
-        const MM_LENGTH = 200;
-        const PX_PER_MM = 3.2;
-        const START_OFFSET = 40;
-
-        const canvas = document.getElementById('rulerCanvas');
-        const ctx = canvas.getContext('2d');
-        const wrapper = document.getElementById('canvasWrapper');
-
-        const speedInput = document.getElementById('speedInput');
-        const unitMmSec = document.getElementById('unitMmSec');
-        const unitMmMin = document.getElementById('unitMmMin');
-        const posDisplay = document.getElementById('posDisplay');
-        const currentSpeedSpan = document.getElementById('currentSpeedValue');
-        const currentUnitLabel = document.getElementById('currentUnitLabel');
-
-        const resetBtn = document.getElementById('resetPointBtn');
-
-        let speedUnit = 'sec';
-        let pointPosMm = 0;
-        let lastTimestamp = null;
-        let animFrame = null;
-        let isRunning = true;
-
-        function setCanvasSize() {
-            const contentWidth = MM_LENGTH * PX_PER_MM;
-            const totalWidth = Math.max(700, contentWidth + 90);
-            canvas.width = totalWidth;
-            canvas.height = 160;
+        /* Стили для привязки */
+        .snap-group {
+            position: relative;
+            display: inline-block;
         }
 
-        function drawRuler() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        .btn-snap {
+            background: white;
+            border: none;
+            border-radius: 40px;
+            padding: 8px 20px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0, 45, 80, 0.15);
+            border: 1px solid #b3cae3;
+            font-size: 0.95rem;
+            color: #1f4172;
+            transition: 0.1s;
+        }
 
-            const startX = START_OFFSET;
-            const endX = startX + MM_LENGTH * PX_PER_MM;
-            const yLine = 95;
+        .btn-snap:hover {
+            background: #e6f0ff;
+        }
 
-            ctx.beginPath();
-            ctx.lineWidth = 7;
-            ctx.strokeStyle = '#1f4172';
-            ctx.moveTo(startX, yLine);
-            ctx.lineTo(endX, yLine);
-            ctx.stroke();
+        .btn-snap.active {
+            background: #ffd700;
+            color: #1f344f;
+            border-color: #daa520;
+        }
 
-            ctx.fillStyle = '#03223f';
-            ctx.font = 'bold 14px "JetBrains Mono", monospace';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'bottom';
+        .snap-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 5px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            padding: 8px;
+            z-index: 1000;
+            min-width: 120px;
+            border: 1px solid #b3cae3;
+        }
 
-            for (let mm = 0; mm <= MM_LENGTH; mm++) {
-                let x = startX + mm * PX_PER_MM;
-                if (x < startX || x > endX) continue;
+        .snap-option {
+            display: block;
+            width: 100%;
+            padding: 8px 15px;
+            border: none;
+            background: none;
+            text-align: left;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: #1f344f;
+            transition: 0.1s;
+            white-space: nowrap;
+        }
 
-                let height = 15;
-                let lineW = 1.5;
-                let isMajor = false;
+        .snap-option:hover {
+            background: #e6f0ff;
+        }
 
-                if (mm % 10 === 0) {
-                    height = 34;
-                    lineW = 3.5;
-                    isMajor = true;
-                } else if (mm % 5 === 0) {
-                    height = 26;
-                    lineW = 2.5;
-                } else {
-                    height = 18;
-                    lineW = 1.5;
+        .snap-option.active {
+            background: #1f4172;
+            color: white;
+        }
+
+        @media (max-width: 600px) {
+            .snap-menu {
+                right: auto;
+                left: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <h1>
+            ⚙️ Фреза линейка
+            <span>подача мм/сек · мм/мин · дюймы</span>
+        </h1>
+
+        <div class="control-panel">
+            <div class="speed-box">
+                <label>⚡ скорость</label>
+                <input type="number" id="speedInput" value="30" min="0.1" max="2000" step="0.1">
+            </div>
+            <div class="unit-selector" id="speedUnitGroup">
+                <button id="unitMmSec" class="unit-btn active-speed">мм/сек</button>
+                <button id="unitMmMin" class="unit-btn">мм/мин</button>
+                <button id="unitInch" class="unit-btn">дюймы/мин</button>
+            </div>
+        </div>
+
+        <div class="ruler-container">
+            <div class="ruler-header">
+                <span>0 мм / 0"</span>
+                <span>200 мм / 7.87"</span>
+            </div>
+            <div class="canvas-wrapper" id="canvasWrapper">
+                <canvas id="rulerCanvas" width="800" height="180"></canvas>
+            </div>
+
+            <div class="info-bar">
+                <div class="readouts-group">
+                    <div class="readout" id="posDisplay">📍 0.00 мм</div>
+                    <div class="readout inch-readout" id="inchDisplay">📏 0.000"</div>
+                    <div class="readout time-readout" id="timeDisplay">⏱️ 0.000 с</div>
+                </div>
+                <div class="controls-group">
+                    <button class="btn-playpause" id="playPauseBtn">⏸️ Пауза</button>
+                    <button class="btn-reset" id="resetPointBtn">⟲ сброс</button>
+                    <div class="jog-group">
+                        <button class="btn-jog" id="jogLeftBtn" title="Короткое нажатие: -0.01 мм / -0.0004" ,
+                            длительное: плавное ускорение влево">◀ 0.01мм</button>
+                        <button class="btn-jog" id="jogRightBtn" title="Короткое нажатие: +0.01 мм / +0.0004" ,
+                            длительное: плавное ускорение вправо">0.01мм ▶</button>
+                        <div class="snap-group">
+                            <button class="btn-snap" id="snapToggle" title="Режим привязки">🔓 Snap</button>
+                            <div class="snap-menu" id="snapMenu" style="display: none;">
+                                <button class="snap-option active" data-snap="0">Свободно</button>
+                                <button class="snap-option" data-snap="1">1 мм</button>
+                                <button class="snap-option" data-snap="5">5 мм</button>
+                                <button class="snap-option" data-snap="10">10 мм</button>
+                                <button class="snap-option" data-snap="inch1">1"</button>
+                                <button class="snap-option" data-snap="inch2">1/2"</button>
+                                <button class="snap-option" data-snap="inch4">1/4"</button>
+                                <button class="snap-option" data-snap="inch8">1/8"</button>
+                                <button class="snap-option" data-snap="inch16">1/16"</button>
+                                <button class="snap-option" data-snap="inch32">1/32"</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="jog-tip">
+                <span>⚡ Короткое нажатие: шаг 0.01 мм</span>
+                <span>⏱️ Длительное нажатие: плавное ускорение</span>
+            </div>
+            <div class="legend">
+                <span>Точка фрезы · скорость <span id="currentSpeedValue">30</span> <span
+                        id="currentUnitLabel">мм/сек</span></span>
+            </div>
+        </div>
+        <footer>фреза линейка · визуализация скорости подачи для ЧПУ</footer>
+    </div>
+
+    <script>
+        (function () {
+            const MM_LENGTH = 200;
+            const PX_PER_MM = 3.2;
+            const START_OFFSET = 40;
+
+            // Настройки для перемотки
+            const JOG_STEP_SHORT = 0.01; // шаг при коротком нажатии (0.01 мм)
+            const JOG_LONG_PRESS_DELAY = 400; // мс - через сколько считать нажатие длительным
+            const JOG_MAX_SPEED = 1; // максимальная скорость плавной перемотки (мм/сек)
+            const JOG_ACCELERATION = 0.5; // ускорение (мм/сек²)
+
+            // Константы для пересчета единиц
+            const INCH_TO_MM = 25.4; // 1 дюйм = 25.4 мм
+
+            // Дюймовые дроби для подписей
+            const INCH_FRACTIONS = [
+                { mm: 0, fraction: "0", decimal: 0 },
+                { mm: 3.175, fraction: "1/8", decimal: 0.125 },
+                { mm: 6.35, fraction: "1/4", decimal: 0.25 },
+                { mm: 9.525, fraction: "3/8", decimal: 0.375 },
+                { mm: 12.7, fraction: "1/2", decimal: 0.5 },
+                { mm: 15.875, fraction: "5/8", decimal: 0.625 },
+                { mm: 19.05, fraction: "3/4", decimal: 0.75 },
+                { mm: 22.225, fraction: "7/8", decimal: 0.875 },
+                { mm: 25.4, fraction: "1", decimal: 1 },
+                { mm: 38.1, fraction: "1½", decimal: 1.5 },
+                { mm: 50.8, fraction: "2", decimal: 2 },
+                { mm: 63.5, fraction: "2½", decimal: 2.5 },
+                { mm: 76.2, fraction: "3", decimal: 3 },
+                { mm: 88.9, fraction: "3½", decimal: 3.5 },
+                { mm: 101.6, fraction: "4", decimal: 4 },
+                { mm: 114.3, fraction: "4½", decimal: 4.5 },
+                { mm: 127, fraction: "5", decimal: 5 },
+                { mm: 139.7, fraction: "5½", decimal: 5.5 },
+                { mm: 152.4, fraction: "6", decimal: 6 },
+                { mm: 165.1, fraction: "6½", decimal: 6.5 },
+                { mm: 177.8, fraction: "7", decimal: 7 },
+                { mm: 190.5, fraction: "7½", decimal: 7.5 },
+                { mm: 203.2, fraction: "8", decimal: 8 }
+            ];
+
+            const canvas = document.getElementById('rulerCanvas');
+            const ctx = canvas.getContext('2d');
+            const wrapper = document.getElementById('canvasWrapper');
+
+            const speedInput = document.getElementById('speedInput');
+            const unitMmSec = document.getElementById('unitMmSec');
+            const unitMmMin = document.getElementById('unitMmMin');
+            const unitInch = document.getElementById('unitInch');
+            const posDisplay = document.getElementById('posDisplay');
+            const inchDisplay = document.getElementById('inchDisplay');
+            const timeDisplay = document.getElementById('timeDisplay');
+            const currentSpeedSpan = document.getElementById('currentSpeedValue');
+            const currentUnitLabel = document.getElementById('currentUnitLabel');
+
+            const resetBtn = document.getElementById('resetPointBtn');
+            const playPauseBtn = document.getElementById('playPauseBtn');
+            const jogLeftBtn = document.getElementById('jogLeftBtn');
+            const jogRightBtn = document.getElementById('jogRightBtn');
+
+            let speedUnit = 'sec'; // 'sec', 'min', 'inch'
+            let pointPosMm = 0;
+            let elapsedTimeSec = 0;
+            let lastTimestamp = null;
+            let animFrame = null;
+            let isRunning = true;
+
+            // Переменные для обработки длительных нажатий
+            let pressTimer = null;
+            let isLongPress = false;
+            let activeJogDirection = null; // 'left' или 'right'
+            let jogSpeed = 0; // текущая скорость перемотки
+            let lastJogTime = null;
+            // Переменные для перетаскивания
+            let isDragging = false;
+            let dragStartX = 0;
+            let dragStartPos = 0;
+
+            // Переменные для привязки
+            let snapMode = 0; // 0 - свободно, 1 - 1мм, 5 - 5мм, 10 - 10мм, 'inch8' - 1/8", 'inch16' - 1/16"
+            let snapMenuVisible = false;
+
+            // Функция привязки к сетке
+            function snapToGrid(value, mode) {
+                if (mode === 0) return value;
+
+                if (mode === 1) {
+                    return Math.round(value * 100) / 100;
+                } else if (mode === 5) {
+                    return Math.round(value / 5) * 5;
+                } else if (mode === 10) {
+                    return Math.round(value / 10) * 10;
+                } else if (mode === 'inch1') {
+                    // 1 дюйм = 25.4 мм
+                    return Math.round(value / 25.4) * 25.4;
+                } else if (mode === 'inch2') {
+                    // 1/2 дюйма = 12.7 мм
+                    return Math.round(value / 12.7) * 12.7;
+                } else if (mode === 'inch4') {
+                    // 1/4 дюйма = 6.35 мм
+                    return Math.round(value / 6.35) * 6.35;
+                } else if (mode === 'inch8') {
+                    // 1/8 дюйма = 3.175 мм
+                    return Math.round(value / 3.175) * 3.175;
+                } else if (mode === 'inch16') {
+                    // 1/16 дюйма = 1.5875 мм
+                    return Math.round(value / 1.5875) * 1.5875;
+                } else if (mode === 'inch32') {
+                    // 1/32 дюйма = 0.79375 мм
+                    return Math.round(value / 0.79375) * 0.79375;
+                }
+                return value;
+            }
+
+            // Функция для применения привязки
+            function applySnap() {
+                if (snapMode !== 0) {
+                    pointPosMm = snapToGrid(pointPosMm, snapMode);
+                    redrawCanvas();
+                    updateLabel();
+                }
+            }
+
+            // Обработчики для меню привязки
+            document.getElementById('snapToggle').addEventListener('click', () => {
+                snapMenuVisible = !snapMenuVisible;
+                document.getElementById('snapMenu').style.display = snapMenuVisible ? 'block' : 'none';
+            });
+
+            document.querySelectorAll('.snap-option').forEach(option => {
+                option.addEventListener('click', (e) => {
+                    // Убираем активный класс у всех
+                    document.querySelectorAll('.snap-option').forEach(opt => {
+                        opt.classList.remove('active');
+                    });
+
+                    // Добавляем активный класс выбранному
+                    option.classList.add('active');
+
+                    // Устанавливаем режим
+                    snapMode = option.dataset.snap === '0' ? 0 :
+                        (option.dataset.snap === '1' ? 1 :
+                            (option.dataset.snap === '5' ? 5 :
+                                (option.dataset.snap === '10' ? 10 : option.dataset.snap)));
+
+                    // Обновляем кнопку
+                    let snapBtn = document.getElementById('snapToggle');
+                    if (snapMode === 0) {
+                        snapBtn.innerHTML = '🔓 Snap';
+                        snapBtn.classList.remove('active');
+                    } else {
+                        snapBtn.innerHTML = `🔒 ${option.textContent}`;
+                        snapBtn.classList.add('active');
+                    }
+
+                    // Применяем привязку к текущей позиции
+                    applySnap();
+
+                    // Закрываем меню
+                    snapMenuVisible = false;
+                    document.getElementById('snapMenu').style.display = 'none';
+                });
+            });
+
+            // Закрытие меню при клике вне его
+            document.addEventListener('click', (e) => {
+                if (!e.target.closest('.snap-group')) {
+                    snapMenuVisible = false;
+                    document.getElementById('snapMenu').style.display = 'none';
+                }
+            });
+
+            // Функции для обработки перетаскивания
+            function startDrag(e) {
+                if (isRunning) return; // только на паузе
+
+                e.preventDefault();
+                isDragging = true;
+                canvas.classList.add('dragging');
+
+                // Получаем координаты касания/клика
+                const clientX = e.type.startsWith('touch') ? e.touches[0].clientX : e.clientX;
+
+                // Получаем позицию canvas
+                const rect = canvas.getBoundingClientRect();
+                const scaleX = canvas.width / rect.width; // учитываем масштабирование
+
+                // Вычисляем позицию в пикселях canvas
+                const canvasX = (clientX - rect.left) * scaleX;
+                dragStartX = canvasX;
+                dragStartPos = pointPosMm;
+
+                // Отключаем анимацию на время перетаскивания
+                if (animFrame) {
+                    cancelAnimationFrame(animFrame);
+                    animFrame = null;
+                }
+            }
+
+            function onDrag(e) {
+                if (!isDragging || isRunning) return;
+
+                e.preventDefault();
+
+                // Получаем координаты касания/клика
+                const clientX = e.type.startsWith('touch') ? e.touches[0].clientX : e.clientX;
+
+                // Получаем позицию canvas
+                const rect = canvas.getBoundingClientRect();
+                const scaleX = canvas.width / rect.width;
+
+                // Вычисляем текущую позицию в пикселях canvas
+                const canvasX = (clientX - rect.left) * scaleX;
+
+                // Вычисляем смещение в пикселях
+                const deltaPx = canvasX - dragStartX;
+
+                // Переводим в миллиметры
+                const deltaMm = deltaPx / PX_PER_MM;
+
+                // Новая позиция с ограничениями
+                let newPos = dragStartPos + deltaMm;
+                newPos = Math.max(0, Math.min(MM_LENGTH, newPos));
+
+                // Обновляем позицию
+                pointPosMm = newPos;
+                applySnap()
+                // Перерисовываем
+                redrawCanvas();
+                updateLabel();
+            }
+
+            function endDrag(e) {
+                if (!isDragging) return;
+
+                e.preventDefault();
+                isDragging = false;
+                canvas.classList.remove('dragging');
+
+                // Возобновляем анимацию, если она была запущена
+                if (isRunning && !animFrame) {
+                    animFrame = requestAnimationFrame(animation);
+                }
+            }
+            // Функция для форматирования дюймов в дроби
+            function formatInchFraction(inches) {
+                let whole = Math.floor(inches);
+                let fraction = inches - whole;
+
+                // Находим ближайшую стандартную дробь
+                const fractions = [
+                    { decimal: 0.0625, text: "1/16" },
+                    { decimal: 0.125, text: "1/8" },
+                    { decimal: 0.1875, text: "3/16" },
+                    { decimal: 0.25, text: "1/4" },
+                    { decimal: 0.3125, text: "5/16" },
+                    { decimal: 0.375, text: "3/8" },
+                    { decimal: 0.4375, text: "7/16" },
+                    { decimal: 0.5, text: "1/2" },
+                    { decimal: 0.5625, text: "9/16" },
+                    { decimal: 0.625, text: "5/8" },
+                    { decimal: 0.6875, text: "11/16" },
+                    { decimal: 0.75, text: "3/4" },
+                    { decimal: 0.8125, text: "13/16" },
+                    { decimal: 0.875, text: "7/8" },
+                    { decimal: 0.9375, text: "15/16" }
+                ];
+
+                if (fraction < 0.001) {
+                    return whole + '"';
                 }
 
+                let bestMatch = fractions.reduce((prev, curr) => {
+                    return (Math.abs(curr.decimal - fraction) < Math.abs(prev.decimal - fraction) ? curr : prev);
+                });
+
+                if (whole === 0) {
+                    return bestMatch.text + '"';
+                } else {
+                    return whole + bestMatch.text + '"';
+                }
+            }
+
+            function setCanvasSize() {
+                const contentWidth = MM_LENGTH * PX_PER_MM;
+                const totalWidth = Math.max(750, contentWidth + 90);
+                canvas.width = totalWidth;
+                canvas.height = 180;
+            }
+
+            function drawRuler() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+                const startX = START_OFFSET;
+                const endX = startX + MM_LENGTH * PX_PER_MM;
+                const yLine = 110;
+
+                // Рисуем основную линию линейки
                 ctx.beginPath();
-                ctx.moveTo(x, yLine - height);
-                ctx.lineTo(x, yLine + 4);
-                ctx.strokeStyle = isMajor ? '#14375c' : '#597b9f';
-                ctx.lineWidth = lineW;
+                ctx.lineWidth = 8;
+                ctx.strokeStyle = '#1f4172';
+                ctx.moveTo(startX, yLine);
+                ctx.lineTo(endX, yLine);
                 ctx.stroke();
 
-                if (isMajor) {
-                    ctx.fillStyle = '#0a2e50';
-                    ctx.font = 'bold 15px "Segoe UI", monospace';
-                    if (mm === 0 || mm === 50 || mm === 100 || mm === 150 || mm === 200) {
-                        ctx.fillText(mm + ' мм', x, yLine - 48);
+                // Рисуем зубчатую канавку 
+                ctx.beginPath();
+                ctx.strokeStyle = '#8ba3c2';
+                ctx.lineWidth = 1.5;
+                for (let mm = 0; mm <= MM_LENGTH; mm += 0.5) {
+                    let x = startX + mm * PX_PER_MM;
+                    if (mm % 1 === 0) {
+                        // Основные зубцы
+                        ctx.beginPath();
+                        ctx.moveTo(x, yLine - 4);
+                        ctx.lineTo(x, yLine - 12);
+                        ctx.strokeStyle = '#5279a3';
+                        ctx.stroke();
+                    } else {
+                        // Мелкие зубцы
+                        ctx.beginPath();
+                        ctx.moveTo(x, yLine - 2);
+                        ctx.lineTo(x, yLine - 6);
+                        ctx.strokeStyle = '#8ba3c2';
+                        ctx.stroke();
+                    }
+                }
+
+                // Рисуем миллиметровую градуировку
+                for (let mm = 0; mm <= MM_LENGTH; mm++) {
+                    let x = startX + mm * PX_PER_MM;
+                    if (x < startX || x > endX) continue;
+
+                    let height;
+                    let lineW;
+                    let isMajor = false;
+
+                    // Определяем тип деления
+                    if (mm % 10 === 0) {
+                        height = 38;
+                        lineW = 2.5;
+                        isMajor = true;
+                    } else if (mm % 5 === 0) {
+                        height = 28;
+                        lineW = 2.0;
+                    } else {
+                        height = 14;
+                        lineW = 1.0;
+                    }
+
+                    // Рисуем штрих
+                    ctx.beginPath();
+                    ctx.moveTo(x, yLine - height);
+                    ctx.lineTo(x, yLine - 2);
+
+                    ctx.strokeStyle = '#1f4172';
+                    ctx.lineWidth = lineW;
+                    ctx.stroke();
+
+                    // Подписи мм
+                    if (isMajor) {
+                        ctx.fillStyle = '#0a2e50';
+                        ctx.font = 'bold 14px "Segoe UI", monospace';
+                        ctx.fillText(mm, x, yLine - 45);
+                    }
+                }
+
+                // Добавляем подпись "мм"
+                ctx.fillStyle = '#1f4172';
+                ctx.font = 'bold 12px "Segoe UI", monospace';
+                ctx.fillText('мм', startX - 25, yLine - 25);
+
+                // Рисуем дюймовые дроби под линейкой
+                ctx.fillStyle = '#8ba3c2';
+                ctx.font = 'bold 11px "Segoe UI", monospace';
+                ctx.textAlign = 'center';
+
+                for (let i = 0; i < INCH_FRACTIONS.length; i++) {
+                    let inch = INCH_FRACTIONS[i];
+                    let x = startX + inch.mm * PX_PER_MM;
+                    if (x >= startX && x <= endX) {
+                        // Для целых дюймов делаем более жирную подпись
+                        if (inch.fraction.includes('½') || inch.fraction === '0' || inch.fraction === '1' || inch.fraction === '2' || inch.fraction === '3' || inch.fraction === '4' || inch.fraction === '5' || inch.fraction === '6' || inch.fraction === '7' || inch.fraction === '8') {
+                            ctx.font = 'bold 12px "Segoe UI", monospace';
+                            ctx.fillStyle = '#5279a3';
+                        } else {
+                            ctx.font = '10px "Segoe UI", monospace';
+                            ctx.fillStyle = '#8ba3c2';
+                        }
+                        ctx.fillText(inch.fraction + '"', x, yLine + 25);
                     }
                 }
             }
-        }
 
-        function drawPoint() {
-            const startX = START_OFFSET;
-            const x = startX + pointPosMm * PX_PER_MM;
-            const y = 80;
-            const pointRadius = 5;
+            function drawPoint() {
+                const startX = START_OFFSET;
+                const x = startX + pointPosMm * PX_PER_MM;
+                const y = 90;
+                const pointRadius = 6;
 
-            ctx.beginPath();
-            ctx.arc(x, y, pointRadius, 0, 2 * Math.PI);
-            ctx.fillStyle = '#cf1f4e';
-            ctx.shadowColor = '#9e1040';
-            ctx.shadowBlur = 8;
-            ctx.fill();
-            ctx.shadowBlur = 0;
-            ctx.strokeStyle = '#fffbe6';
-            ctx.lineWidth = 2;
-            ctx.stroke();
+                ctx.beginPath();
+                ctx.arc(x, y, pointRadius, 0, 2 * Math.PI);
+                ctx.fillStyle = '#cf1f4e';
+                ctx.shadowColor = '#9e1040';
+                ctx.shadowBlur = 10;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+                ctx.strokeStyle = 'white';
+                ctx.lineWidth = 2.5;
+                ctx.stroke();
 
-            ctx.beginPath();
-            ctx.arc(x-1.5, y-1.5, 1.8, 0, 2*Math.PI);
-            ctx.fillStyle = '#ff9eb5';
-            ctx.fill();
-        }
+                // Блик
+                ctx.beginPath();
+                ctx.arc(x - 2, y - 2, 2, 0, 2 * Math.PI);
+                ctx.fillStyle = '#ff9eb5';
+                ctx.fill();
+            }
 
-        function redrawCanvas() {
-            drawRuler();
-            drawPoint();
-        }
+            function redrawCanvas() {
+                drawRuler();
+                drawPoint();
+            }
 
-        function updateLabel() {
-            posDisplay.innerText = `📍 ${pointPosMm.toFixed(2)} мм`;
-            currentSpeedSpan.innerText = speedInput.value;
-            currentUnitLabel.innerText = (speedUnit === 'sec') ? 'мм/сек' : 'мм/мин';
-            
-            // Обновляем title страницы для поисковиков (динамически)
-            document.title = `Фреза линейка — ${speedInput.value} ${speedUnit === 'sec' ? 'мм/сек' : 'мм/мин'} | визуализация ЧПУ`;
-        }
-
-        function resetPoint() {
-            pointPosMm = 0;
-            lastTimestamp = null;
-            redrawCanvas();
-            updateLabel();
-        }
-
-        function animation(now) {
-            if (!isRunning) return;
-
-            if (lastTimestamp !== null) {
-                const deltaSec = (now - lastTimestamp) / 1000;
-
+            function getSpeedInMmPerSec() {
                 let speedVal = parseFloat(speedInput.value) || 0;
                 if (speedVal < 0) speedVal = 0;
 
-                let speedMmPerSec = speedVal;
-                if (speedUnit === 'min') {
-                    speedMmPerSec = speedVal / 60.0;
+                if (speedUnit === 'sec') {
+                    return speedVal;
+                } else if (speedUnit === 'min') {
+                    return speedVal / 60.0;
+                } else if (speedUnit === 'inch') {
+                    return (speedVal * INCH_TO_MM) / 60.0;
                 }
-
-                let maxStep = 20.0;
-                let deltaPos = Math.min(speedMmPerSec * deltaSec, maxStep);
-                if (deltaPos > 0.0001) {
-                    pointPosMm += deltaPos;
-                }
-
-                if (pointPosMm >= MM_LENGTH) {
-                    pointPosMm = 0.0;
-                }
+                return 0;
             }
 
-            lastTimestamp = now;
-            redrawCanvas();
-            updateLabel();
+            // Добавьте переменные для хранения предыдущих значений
+            let lastPosValue = -1;
+            let lastInchValue = -1;
+            let lastTimeValue = -1;
 
+            // В функции updateLabel() замените на это
+            function updateLabel() {
+                // Показываем позицию в мм
+                let posText = `📍 ${pointPosMm.toFixed(2)} мм`;
+                if (posDisplay.innerText !== posText) {
+                    posDisplay.innerText = posText;
+                }
+
+                // Показываем дюймы
+                let inches = pointPosMm / INCH_TO_MM;
+                let inchFraction = formatInchFraction(inches);
+                let inchText = `📏 ${inchFraction}`;
+                if (inchDisplay.innerText !== inchText) {
+                    inchDisplay.innerText = inchText;
+                }
+
+                // Время с миллисекундами
+                let timeText = `⏱️ ${elapsedTimeSec.toFixed(3)} с`;
+                if (timeDisplay.innerText !== timeText) {
+                    timeDisplay.innerText = timeText;
+                }
+
+                // Скорость (меняется редко)
+                let speedText = speedInput.value;
+                if (currentSpeedSpan.innerText !== speedText) {
+                    currentSpeedSpan.innerText = speedText;
+                }
+
+                // Обновляем метку единиц скорости
+                let unitText = '';
+                if (speedUnit === 'sec') unitText = 'мм/сек';
+                else if (speedUnit === 'min') unitText = 'мм/мин';
+                else if (speedUnit === 'inch') unitText = 'дюймы/мин';
+
+                if (currentUnitLabel.innerText !== unitText) {
+                    currentUnitLabel.innerText = unitText;
+                }
+
+                // Обновляем состояние кнопок перемотки
+                jogLeftBtn.disabled = isRunning;
+                jogRightBtn.disabled = isRunning;
+
+                // Обновляем title страницы для поисковиков
+                document.title = `Фреза линейка — ${speedInput.value} ${unitText} | визуализация ЧПУ`;
+            }
+
+            function resetPoint() {
+                pointPosMm = 0;
+                elapsedTimeSec = 0;
+                lastTimestamp = null;
+                redrawCanvas();
+                updateLabel();
+            }
+
+            function togglePlayPause() {
+                isRunning = !isRunning;
+                if (isRunning) {
+                    playPauseBtn.innerHTML = '⏸️ Пауза';
+                    playPauseBtn.classList.remove('paused');
+                    lastTimestamp = null;
+                    animFrame = requestAnimationFrame(animation);
+                } else {
+                    playPauseBtn.innerHTML = '▶️ Пуск';
+                    playPauseBtn.classList.add('paused');
+                    if (animFrame) {
+                        cancelAnimationFrame(animFrame);
+                        animFrame = null;
+                    }
+                }
+                updateLabel();
+            }
+
+            function jogShort(direction) {
+                if (isRunning) return;
+
+                if (direction === 'left') {
+                    pointPosMm = Math.max(0, pointPosMm - JOG_STEP_SHORT);
+                } else {
+                    pointPosMm = Math.min(MM_LENGTH, pointPosMm + JOG_STEP_SHORT);
+                }
+
+                applySnap();
+
+                redrawCanvas();
+                updateLabel();
+            }
+
+            function startJog(direction) {
+                if (isRunning) return;
+
+                if (pressTimer) {
+                    clearTimeout(pressTimer);
+                }
+
+                isLongPress = false;
+                activeJogDirection = direction;
+                jogSpeed = 5;
+                lastJogTime = performance.now();
+
+                pressTimer = setTimeout(() => {
+                    isLongPress = true;
+                    jogLeftBtn.classList.add('jog-fast');
+                    jogRightBtn.classList.add('jog-fast');
+                    if (!animFrame) {
+                        animFrame = requestAnimationFrame(jogAnimation);
+                    }
+                }, JOG_LONG_PRESS_DELAY);
+            }
+
+            function endJog() {
+                if (pressTimer) {
+                    clearTimeout(pressTimer);
+                    pressTimer = null;
+                }
+
+                if (!isLongPress && activeJogDirection) {
+                    jogShort(activeJogDirection);
+                }
+
+                isLongPress = false;
+                activeJogDirection = null;
+                jogSpeed = 0;
+                jogLeftBtn.classList.remove('jog-fast');
+                jogRightBtn.classList.remove('jog-fast');
+            }
+
+            function jogAnimation(now) {
+                if (!isLongPress || !activeJogDirection || isRunning) {
+                    if (animFrame) {
+                        cancelAnimationFrame(animFrame);
+                        animFrame = null;
+                    }
+                    return;
+                }
+
+                if (lastJogTime) {
+                    const deltaSec = (now - lastJogTime) / 1000;
+
+                    jogSpeed = Math.min(JOG_MAX_SPEED, jogSpeed + JOG_ACCELERATION * deltaSec);
+
+                    let deltaPos = jogSpeed * deltaSec;
+
+                    if (activeJogDirection === 'left') {
+                        pointPosMm = Math.max(0, pointPosMm - deltaPos);
+                    } else {
+                        pointPosMm = Math.min(MM_LENGTH, pointPosMm + deltaPos);
+                    }
+                    applySnap();
+                    redrawCanvas();
+                    updateLabel();
+                }
+
+                lastJogTime = now;
+                animFrame = requestAnimationFrame(jogAnimation);
+            }
+
+            function animation(now) {
+                if (!isRunning) return;
+
+                if (lastTimestamp !== null) {
+                    const deltaSec = (now - lastTimestamp) / 1000;
+
+                    let speedMmPerSec = getSpeedInMmPerSec();
+
+                    let maxStep = 20.0;
+                    let deltaPos = Math.min(speedMmPerSec * deltaSec, maxStep);
+                    if (deltaPos > 0.0001) {
+                        pointPosMm += deltaPos;
+                        elapsedTimeSec += deltaSec;
+                    }
+                    applySnap();
+                    if (pointPosMm >= MM_LENGTH) {
+                        pointPosMm = 0.0;
+                    }
+                }
+
+                lastTimestamp = now;
+                redrawCanvas();
+                updateLabel();
+
+                animFrame = requestAnimationFrame(animation);
+            }
+            // Обработчики для кнопок единиц измерения
+            unitMmSec.addEventListener('click', () => {
+                if (speedUnit === 'sec') return;
+                speedUnit = 'sec';
+                unitMmSec.classList.add('active-speed');
+                unitMmMin.classList.remove('active-speed');
+                unitInch.classList.remove('active-speed');
+                updateLabel();
+            });
+
+            unitMmMin.addEventListener('click', () => {
+                if (speedUnit === 'min') return;
+                speedUnit = 'min';
+                unitMmMin.classList.add('active-speed');
+                unitMmSec.classList.remove('active-speed');
+                unitInch.classList.remove('active-speed');
+                updateLabel();
+            });
+
+            unitInch.addEventListener('click', () => {
+                if (speedUnit === 'inch') return;
+                speedUnit = 'inch';
+                unitInch.classList.add('active-speed');
+                unitMmSec.classList.remove('active-speed');
+                unitMmMin.classList.remove('active-speed');
+                updateLabel();
+            });
+
+            // Обработчики событий для кнопок перемотки
+            jogLeftBtn.addEventListener('mousedown', () => startJog('left'));
+            jogLeftBtn.addEventListener('mouseup', endJog);
+            jogLeftBtn.addEventListener('mouseleave', endJog);
+
+            jogRightBtn.addEventListener('mousedown', () => startJog('right'));
+            jogRightBtn.addEventListener('mouseup', endJog);
+            jogRightBtn.addEventListener('mouseleave', endJog);
+
+            // Для touch-устройств
+            jogLeftBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                startJog('left');
+            });
+            jogLeftBtn.addEventListener('touchend', endJog);
+            jogLeftBtn.addEventListener('touchcancel', endJog);
+
+            jogRightBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault();
+                startJog('right');
+            });
+            jogRightBtn.addEventListener('touchend', endJog);
+            jogRightBtn.addEventListener('touchcancel', endJog);
+
+            speedInput.addEventListener('input', updateLabel);
+            resetBtn.addEventListener('click', resetPoint);
+            playPauseBtn.addEventListener('click', togglePlayPause);
+
+            // Обработчики для перетаскивания
+            canvas.addEventListener('mousedown', startDrag);
+            window.addEventListener('mousemove', onDrag);
+            window.addEventListener('mouseup', endDrag);
+
+            // Сенсорные события
+            canvas.addEventListener('touchstart', startDrag, { passive: false });
+            canvas.addEventListener('touchmove', onDrag, { passive: false });
+            canvas.addEventListener('touchend', endDrag);
+            canvas.addEventListener('touchcancel', endDrag);
+
+            // Предотвращаем выделение текста при перетаскивании
+            canvas.addEventListener('dragstart', (e) => e.preventDefault());
+            setCanvasSize();
+            resetPoint();
             animFrame = requestAnimationFrame(animation);
-        }
 
-        unitMmSec.addEventListener('click', () => {
-            if (speedUnit === 'sec') return;
-            speedUnit = 'sec';
-            unitMmSec.classList.add('active-speed');
-            unitMmMin.classList.remove('active-speed');
-            updateLabel();
-        });
+            window.addEventListener('beforeunload', () => {
+                if (animFrame) cancelAnimationFrame(animFrame);
+                if (pressTimer) clearTimeout(pressTimer);
+            });
 
-        unitMmMin.addEventListener('click', () => {
-            if (speedUnit === 'min') return;
-            speedUnit = 'min';
-            unitMmMin.classList.add('active-speed');
-            unitMmSec.classList.remove('active-speed');
-            updateLabel();
-        });
-
-        speedInput.addEventListener('input', updateLabel);
-        resetBtn.addEventListener('click', resetPoint);
-
-        setCanvasSize();
-        resetPoint();
-        animFrame = requestAnimationFrame(animation);
-
-        window.addEventListener('beforeunload', () => {
-            if (animFrame) cancelAnimationFrame(animFrame);
-        });
-
-        window.addEventListener('resize', () => {
-            redrawCanvas();
-        });
-    })();
-</script>
+            window.addEventListener('resize', () => {
+                redrawCanvas();
+            });
+        })();
+    </script>
 </body>
+
 </html>
