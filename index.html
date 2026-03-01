@@ -1124,11 +1124,26 @@
                 updateLabel();
             }
 
+            // Добавьте в функцию togglePlayPause()
             function togglePlayPause() {
                 isRunning = !isRunning;
                 if (isRunning) {
                     playPauseBtn.innerHTML = '⏸️ Пауза';
                     playPauseBtn.classList.remove('paused');
+
+                    // АВТОМАТИЧЕСКИ ОТКЛЮЧАЕМ ПРИВЯЗКУ ПРИ ЗАПУСКЕ
+                    snapMode = 0;
+                    // Обновляем кнопку Snap
+                    let snapBtn = document.getElementById('snapToggle');
+                    snapBtn.innerHTML = '🔓 Snap';
+                    snapBtn.classList.remove('active');
+                    // Сбрасываем активный класс в меню
+                    document.querySelectorAll('.snap-option').forEach(opt => {
+                        opt.classList.remove('active');
+                    });
+                    // Активируем "Свободно"
+                    document.querySelector('.snap-option[data-snap="0"]').classList.add('active');
+
                     lastTimestamp = null;
                     animFrame = requestAnimationFrame(animation);
                 } else {
