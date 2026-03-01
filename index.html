@@ -879,41 +879,35 @@
                 }
             }
             // Функция для форматирования дюймов в дроби
+            // Функция для форматирования дюймов в дроби
             function formatInchFraction(inches) {
                 let whole = Math.floor(inches);
                 let fraction = inches - whole;
 
-                // Находим ближайшую стандартную дробь
-                const fractions = [
-                    { decimal: 0.0625, text: "1/16" },
-                    { decimal: 0.125, text: "1/8" },
-                    { decimal: 0.1875, text: "3/16" },
-                    { decimal: 0.25, text: "1/4" },
-                    { decimal: 0.3125, text: "5/16" },
-                    { decimal: 0.375, text: "3/8" },
-                    { decimal: 0.4375, text: "7/16" },
-                    { decimal: 0.5, text: "1/2" },
-                    { decimal: 0.5625, text: "9/16" },
-                    { decimal: 0.625, text: "5/8" },
-                    { decimal: 0.6875, text: "11/16" },
-                    { decimal: 0.75, text: "3/4" },
-                    { decimal: 0.8125, text: "13/16" },
-                    { decimal: 0.875, text: "7/8" },
-                    { decimal: 0.9375, text: "15/16" }
-                ];
-
+                // Если дробная часть очень мала, показываем только целое
                 if (fraction < 0.001) {
                     return whole + '"';
                 }
 
-                let bestMatch = fractions.reduce((prev, curr) => {
-                    return (Math.abs(curr.decimal - fraction) < Math.abs(prev.decimal - fraction) ? curr : prev);
-                });
+                // Если дробная часть очень близка к 1, увеличиваем целое
+                if (fraction > 0.999) {
+                    return (whole + 1) + '"';
+                }
+
+                // Представляем дробь в 32-х долях (максимальная точность)
+                let denominator = 32; // можно увеличить до 64, 128 для большей точности
+                let numerator = Math.round(fraction * denominator);
+
+                // Сокращаем дробь
+                let gcd = (a, b) => b ? gcd(b, a % b) : a;
+                let divisor = gcd(numerator, denominator);
+                let simplifiedNum = numerator / divisor;
+                let simplifiedDen = denominator / divisor;
 
                 if (whole === 0) {
-                    return bestMatch.text + '"';
+                    return simplifiedNum + '/' + simplifiedDen + '"';
                 } else {
-                    return whole + bestMatch.text + '"';
+                    return whole + ' ' + simplifiedNum + '/' + simplifiedDen + '"';
                 }
             }
 
